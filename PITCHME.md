@@ -88,9 +88,9 @@ Prelude>
 
 ---
 
-Sean $A$ y $B$ conjuntos, entonces el **producto cartesiano** de $A$ con $B$
+Sean $A$ y $B$ conjuntos, entonces el **producto cartesiano** $A$ por $B$
 es la colección
-$$A \times B =_{def} \{(a, b)\ |\ a \in A, b\in B\}.$$
+$$A \times B =_{def} \\{(a, b)\ |\ a \in A, b\in B\\}.$$
 
 <ul>
 	<li class="fragment">Formalmente, se demuestra que $A \times B$ es un conjunto.</li>
