@@ -98,6 +98,17 @@ $$A \times B =_{def} \\{(a, b)\ |\ a \in A, b\in B\\}.$$
 	
 ---
 
+Sean $A$ y $B$ conjuntos; una **relación** entre $A$ y $B$ es un _subconjunto_
+de $A \times B$.
+
+---
+
+Sean $A$ y $B$ conjuntos; una **función** $f$ con _dominio_ $A$ y _codominio_ $B$
+es una **relación** entre $A$ y $B$ tal que
+$$\forall\ x \in A, y \in A, x = y \implies f(x) = f(y)$$
+
+---
+
 # Tipos de datos primitivos
 
 ---
