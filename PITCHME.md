@@ -193,7 +193,7 @@ Prelude> [2,4..20]
 
 ### Listas por comprensión
 
-$$C = \\{x^2\ |\ x \in \\N, x \text{es impar}$$
+$$C = \\{x^2\ |\ x\ \text{es un natural impar}\\}$$
 
 ---
 
