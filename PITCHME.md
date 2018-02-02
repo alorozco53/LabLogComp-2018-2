@@ -115,7 +115,7 @@ $$\forall\ x \in A, y \in A, x = y \implies f(x) = f(y)$$
 
 ---
 
-<span class="menu-title" >Tipos de datos primitivos</span>
+<span class="slide-title" >Tipos de datos primitivos</span>
 
 ```haskell
 ghci> 2 + 15
@@ -214,6 +214,13 @@ ghci> boomBangs [7..13]
 
 ---
 
+```haskell
+myTail :: [a] -> [a]
+myTail [] = []
+myTail (x:xs) = xs
+```
+---
+
 # Tipos de datos algebraicos
 
 ---
@@ -230,7 +237,41 @@ data [a] = [] | a:[a]
 
 ---
 
-# *Turbo* Recursión
+@title[Definición Nat]
+
+<p><span class="slide-title">Definición Nat</span></p>
+```haskell
+data Nat = Zero | Succ Nat  deriving Show
+```
 
 ---
+
+# Recursión
+
+---
+
+```haskell
+fact :: Int -> Int
+fact n
+ | n <= 0 = 1
+ | otherwise = (fact (n-1)) * n
+```
+
+---
+
+### Ejercicios para puntos extras
+
+- Dé una función que calcule el máximo común divisor de dos números enteros.
+- Escriba un tipo de datos para representar un árbol binario de tipo genérico
+  (`BinTree a`).
+- Dada una lista `xs` de tipo `[Char]`, construya la lista de tipo `[BinTree Char]`
+  que contiene todos los árboles binarios posibles con los elementos de `xs`
+  y que están ordenados (es decir, árboles _de búsqueda binaria_).
+  
+---
+
+### Bibliografía
+
+- http://learnyouahaskell.com/chapters
+- https://drive.google.com/file/d/17atMecWDziidvmdX60klMGBnQtOhTQQf/view?usp=sharing
 
