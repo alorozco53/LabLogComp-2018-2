@@ -237,9 +237,6 @@ data [a] = [] | a:[a]
 
 ---
 
-@title[Definición Nat]
-
-<p><span class="slide-title">Definición Nat</span></p>
 ```haskell
 data Nat = Zero | Succ Nat  deriving Show
 ```
