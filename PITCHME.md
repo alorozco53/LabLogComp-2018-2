@@ -106,12 +106,12 @@ No me gusta cómo Haskell imprime las cosas...
 
 ```haskell
 instance Show a => Show TipoNuevo where
-  show Constructor_1 ... =
-  show Constructor_2 ... =
+  show Constructor_1 ... = ...
+  show Constructor_2 ... = ...
   .
   .
   .
-  show Constructor_m
+  show Constructor_m ... = ...
 ```
 
 Es decir, el `TipoNuevo` se hace instancia de la clase `Show`, que es la
