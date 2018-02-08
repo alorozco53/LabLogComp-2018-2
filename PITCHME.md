@@ -7,18 +7,22 @@
 
 ---
 
-# Paradigmas de programación
+# (Revisión) de tipos de datos
 
-<ul>
-	<li class="fragment">Imperativo</li>
-	<li class="fragment">Orientado a objetos</li>
-	<li class="fragment">_Declarativo_</li>
-	<ul>
-  		<li class="fragment">**Funcional**</li>
-  		<li class="fragment">**Lógico**</li>
-	</ul>
-	<li class="fragment">Multi-paradigma</li>
-</ul>
+---
+
+### Forma general de los tipos de datos _suma_
+
+```haskell
+data TipoNuevo t_1 t_2 ... t_k = Constructor1 a_1_1 a_1_2 ... a_1_n
+	                           | Constructor2 a_2_1 a_2_2 ... a_2_n
+                               |      .
+	                           |      .
+	                           |      .
+	                           | Constructor a_m_1 a_m_2 ... a_m_n
+```
+
+donde los `a_i_j` y `t_i_j` son cualquier tipo definido en Haskell.
 
 ---
 
@@ -63,9 +67,9 @@
   ```bash
   sudo dnf install haskell-platform
   ```
-  
+
 ---
-  
+
 - Mac OS X
   ```bash
   brew cask install haskell-platform
@@ -81,7 +85,7 @@ ghci
 ```
 ```haskell
 GHCi, version 8.2.2: http://www.haskell.org/ghc/  :? for help
-Prelude> 
+Prelude>
 ```
 
 ---
@@ -97,7 +101,7 @@ $$A \times B =_{def} \\{(a, b)\ |\ a \in A, b\in B\\}.$$
 <ul>
 	<li class="fragment">Formalmente, se demuestra que $A \times B$ es un conjunto.</li>
 </ul>
-	
+
 ---
 
 Sean $A$ y $B$ conjuntos; una **relación** entre $A$ y $B$ es un _subconjunto_
@@ -198,9 +202,9 @@ $$C = \\{x^2\ |\ x\ \text{es un natural impar}\\}$$
 ---
 
 ```haskell
-Prelude> [x^2 | x <- [0..10], mod x 2 /= 0] 
+Prelude> [x^2 | x <- [0..10], mod x 2 /= 0]
 [1,9,25,49,81]
-take 15 [x^2 | x <- [0..], mod x 2 /= 0] 
+take 15 [x^2 | x <- [0..], mod x 2 /= 0]
 [1,9,25,49,81,121,169,225,289,361,441,529,625,729,841]
 ```
 
@@ -264,11 +268,10 @@ fact n
 - Dada una lista `xs` de tipo `[Char]`, construya la lista de tipo `[BinTree Char]`
   que contiene todos los árboles binarios posibles con los elementos de `xs`
   y que están ordenados (es decir, árboles _de búsqueda binaria_).
-  
+
 ---
 
 ### Bibliografía
 
 - http://learnyouahaskell.com/chapters
 - https://drive.google.com/file/d/17atMecWDziidvmdX60klMGBnQtOhTQQf/view?usp=sharing
-
