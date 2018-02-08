@@ -94,7 +94,7 @@ Pero, ¿qué acaba de ocurrir?
 - Composición de funciones
 - `($) :: (a -> b) -> a -> b` (agrupamiento de expresiones a la derecha)
 - Análisis de casos dependiendo de los argumentos del constructor
-  (usando notación `|` y `otherwise`.
+  (usando notación `|` y `otherwise`).
 
 ---
 
