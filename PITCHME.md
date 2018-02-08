@@ -58,6 +58,22 @@ nLeaves tree = intToNat $ length $ leaves tree
 
 ---
 
+Cuenta el número de nodos internos (ramas) del árbol
+SIN hacer recursión directamente
+
+```haskell
+nBranches :: BinTree a -> Nat
+nBranches tree = intToNat $ n - l
+  where
+    n = natToInt $ nNodes tree
+    l = natToInt $ nLeaves tree
+```
+
+**Extra**: implementar `nNodes`.
+
+---
+
+
 Inserción _a la_ **árbol de búsqueda binaria**
 
 ```haskell
@@ -71,12 +87,14 @@ insertBST x (BTBranch r lchild rchild)
 ---
 
 
-Pero, ¿qué pasó aquí arriba?
+Pero, ¿qué acaba de ocurrir?
 
 ---
 
 - Composición de funciones
 - `($) :: (a -> b) -> a -> b` (agrupamiento de expresiones a la derecha)
+- Análisis de casos dependiendo de los argumentos del constructor
+  (usando notación `|` y `otherwise`.
 
 ---
 
