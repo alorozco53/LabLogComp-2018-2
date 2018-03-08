@@ -56,7 +56,7 @@ propType = error "TBD"
 
 -- Dada una fórmula, la transforma a sub-fórmulas
 -- según su tipo
-transformProp :: Prop -> (BranchType, (Prop, Prop))
+transformProp :: Prop -> (FormType, (Prop, Prop))
 transformProp = error "TBD"
 
 -- Dada una fórmula, devuelve una rama (alpha o beta) según su tipo o
@@ -77,6 +77,6 @@ compLiterals :: Prop -> Prop -> Bool
 compLiterals = error "TBD"
 
 -- Decide si el argumento lógico dado es correcto o no, usando el método del
--- tablau semántico
+-- tableau semántico
 correctTableau :: [Prop] -> Prop -> Bool
 correctTableau = error "TBD"
