@@ -1,12 +1,12 @@
 {- |
-Module      :  Session4
+Module      :  Ejsem2
 Maintainer  :  alorozco.patriot54@gmail.com
 Stability   :  experimental
 Portability :  portable
 Version     :  0.1
 -}
 
-module Session4 where
+module Ejsem2 where
 
 
 -- Cálculo de proposiciones
