@@ -59,11 +59,6 @@ propType = error "TBD"
 transformProp :: Prop -> (FormType, (Prop, Prop))
 transformProp = error "TBD"
 
--- Dada una fórmula, devuelve una rama (alpha o beta) según su tipo o
--- una hoja etiquetada con literales
-makeBranch :: Prop -> Tableau
-makeBranch = error "TBD"
-
 -- Construye el tableau semántico para el conjunto de fórmulas dado
 makeTableau :: [Prop] -> Tableau
 makeTableau = error "TBD"

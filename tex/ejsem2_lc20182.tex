@@ -1,0 +1,125 @@
+\documentclass[paper=letter, fontsize=12pt]{scrartcl}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english, spanish]{babel}
+\usepackage{hyperref}
+\usepackage{amsfonts,amsthm}
+\usepackage{amsmath}
+\usepackage{listings}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{sectsty}
+\usepackage{dirtree}
+\usepackage{enumitem}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2
+}
+
+\setlength{\DTbaselineskip}{20pt}
+\DTsetlength{1em}{3em}{0.1em}{1pt}{4pt}
+
+\allsectionsfont{\raggedright\large \textit\normalfont\scshape\emph}
+
+\title{Ejercicio Semanal 2}
+
+\subtitle{
+  Lógica Computacional, 2018-2\\
+  Facultad de Ciencias, UNAM
+}
+
+\author{
+  \normalsize
+  Noé Salomón Hernández Sánchez\\
+  \normalsize
+  \texttt{\href{mailto:no.hernan@gmail.com}{no.hernan@gmail.com}}
+  \and
+  \normalsize
+  María del Carmen Sánchez Almanza\\
+  \normalsize
+  \texttt{\href{mailto:carmensanchez@ciencias.unam.mx}{carmensanchez@ciencias.unam.mx}}
+  \and
+  \normalsize
+  Albert Manuel Orozco Camacho\\
+  \normalsize
+  \texttt{\href{mailto:alorozco53@ciencias.unam.mx}{alorozco53@ciencias.unam.mx}}
+}
+
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Objetivo}
+
+\noindent
+Teniendo en cuenta la importancia de la alta complejidad computacional del problema de satisfacibilidad\
+de la lógica proposicional, que el alumno se convenza de la importancia de métodos como el del tableau semántico.
+
+\section{Ejercicios}
+
+\noindent
+El esqueleto de código del ejercicio semanal se encuentra en \url{https://github.com/alorozco53/LabLogComp-2018-2/tree/ejsem2}.\
+Considere los siguientes tipos de datos:
+\begin{lstlisting}[language=Haskell]
+  data FormType = Alpha | Beta  deriving (Show, Eq)
+  data Tableau = Leaf [Prop]
+               | AlphaBranch Prop Prop Tableau
+               | BetaBranch Tableau Tableau
+               deriving Show
+\end{lstlisting}
+\verb+FormType+ clasifica una fórmula como $\alpha$ o $\beta$, según la tabla presentada en la\
+\href{https://docs.google.com/viewer?a=v&pid=sites&srcid=ZGVmYXVsdGRvbWFpbnxsb2dpY2Fjb21wdXRhY2lvbmFsMjAxODJ8Z3g6ZjRhZGUwZjhmODQxYTYz}{Nota 4} del curso.\
+Por otro lado, \verb+Tableau+ representa el árbol de decisiones construído para realizar el método de verificación\
+de correctud de argumentos visto en clase.\par
+Utilizando el tipo de datos \verb+Prop+, el cual se trabajó en la Práctica 1, realizar las siguientes funciones.
+\begin{enumerate}
+\item Escriba una función \verb+isLiteral+ que indique si una fórmula dada es una \emph{literal}.
+\item Implemente una función \verb+propType+ que diga si el tipo \verb+FormType+ ($\alpha$ o $beta$)
+  al que corresponde dicha fórmula.
+\item Dé una función \verb+transformProp+ que dada una fórmula $\Phi$, devuelva una tupla cuya\
+  primera entrada indique el tipo de fórmula de $\Phi$ y cuya segunda entrada sea una tupla que contenga\
+  las fórmulas $(\alpha_1, \alpha_2)$ o  $(\beta_1, \beta_2)$, según corresponda y de acuerdo a la tabla presentada\
+  en la Nota 4. Por ejemplo, si $\Phi := p \leftrightarrow q$, entonces se espera como salida una tupla como:
+  \begin{lstlisting}[language=Haskell]
+    (Alpha, (Imp (VarP "p") (VarP "q"), Imp (VarP "q") (VarP "p")))
+  \end{lstlisting}
+  \textbf{Observación IMPORTANTE}: La doble negación es el único caso en el que no hay dos proposiciones resultantes,\
+  tras clasificar una fórmula como $\alpha$. Por ello, se debe de considerar eliminar este caso ya sea implementando\
+  una forma normal negativa o detectando la doble negación en la implementación.
+\item Implemente una función \verb+makeTableau+ que dada una lista de fórmulas (de tipo \verb+[Prop]+),\
+  devuelva el tableau semántico de ésta. Se aconseja empezar produciendo una fórmula tras realizar\
+  la conjunción de todas las fórmulas de la lista dada. En símbolos, dada la lista $[\Phi_1, \Phi_2,\ldots, \Phi_n]$,\
+  sería conveniente empezar el tableau con la fórmula $\Phi_1 \wedge \Phi_2\wedge\ldots\wedge \Phi_n$.
+\item Escriba una función \verb+literalsBranches+ que dado un tableau semántico, construya la lista de literales\
+  para cada una de las ramas del tableau. Éstas listas de literales serían devueltas dentro de una lista.
+\item Dé una función \verb+compLiterals+ que decida si dadas dos \emph{literales}, éstas son \textbf{complementarias}.
+\item Finalmente, escriba una función \verb+correctTableau+ que dada una lista de fórmulas $\Gamma$ y una fórmula\
+  $\Phi$, decida si $\Gamma \models \Phi$. Recuerde usar el principio de refutación que reducirá esta pregunta\
+  a revisar la satisfacibilidad del conjunto $\Gamma \bigcup \{\neg\Phi\}$. (Una vez tenido dicho conjunto,\
+  se procederá a construir el respectivo tableau semántico).
+\end{enumerate}
+
+\section{Entrega}
+
+\noindent
+La fecha de entrega es el próximo \textbf{lunes 19 de marzo de 2018} por la plataforma\
+de \emph{Google Classroom} del curso y siguiendo los lineamientos del laboratorio.
+
+\end{document}
