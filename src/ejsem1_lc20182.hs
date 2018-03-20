@@ -157,3 +157,43 @@ dumbCompress str = join [range s 0 (div (length s) 2) | s <- split str ' ']
   where
     join [] = ""
     join (x:xs) = x ++ (join xs)
+
+test :: IO()
+test =
+  do
+    putStrLn "myReverse"
+    putStrLn $ show $ myReverse "the quick brown fox" == reverse "the quick brown fox"
+    putStrLn $ show $ myReverse [1..10] /= [1,2..10]
+    putStrLn "myTake"
+    putStrLn $ show $ myTake 5 [100..200] == [100, 101, 102, 103, 104]
+    putStrLn $ show $ myTake 10 [] == ""
+    putStrLn "myCount"
+    putStrLn $ show $ myCount 'a' "the quick brown fox" == 0
+    putStrLn $ show $ myCount 'i' "in the court of the crimson king" == 3
+    putStrLn "myFreq"
+    putStrLn $ show $ compList freqList (myFreq "in the court of the crimson king")
+    putStrLn $ show $ myReverse [1..10] /= [1,2..10]
+    putStrLn "range"
+    putStrLn $ show $ range "abcdefghijk" 3 10 == "defghij"
+    putStrLn $ show $ range "abcdefghijk" 10 0 == ""
+    putStrLn "split"
+    putStrLn $ show $ (split "the quick brown fox" ' ') == ["the","quick","brown","fox"]
+    putStrLn "dumbCompress"
+    putStrLn $ show $ dumbCompress "must the show go on" == "mutshgo"
+    putStrLn "naturales"
+    putStrLn $ show $ (natToInt $ sumNat (Succ $ Succ $ Succ Zero) (Succ $ Zero)) == 1 + 3
+    putStrLn $ show $ (natToInt $ prodNat (intToNat 2) (intToNat 8)) == 16
+    putStrLn $ show $ greaterThan (powerNat (Succ $ Succ $ Zero) (Succ $ Succ $ Succ $ Zero)) (Succ $ Succ Zero)
+    putStrLn $ show $ eqNat (intToNat 10) (prodNat (Succ $ Succ $ Zero) (intToNat 5))
+    putStrLn "throwRev"
+    putStrLn $ show $ throwRev (intToNat 4) "who made who" == "who made"
+      where
+        freqList = [('i',3),('n',3),(' ',6),('t',3),('h',2),('e',2),(' ',6),('c',2),('o',3),('u',1),
+                    ('r',2),('t',3),(' ',6),('o',3),('f',1),(' ',6),('t',3),('h',2),('e',2),(' ',6),
+                    ('c',2),('r',2),('i',3),('m',1),('s',1),('o',3),('n',3),(' ',6),('k',1),('i',3),('n',3),('g',1)]
+        compList [] l = case l of
+                          [] -> True
+                          _ -> False
+        compList xs l = case l of
+                          [] -> False
+                          ys -> and $ [elem x ys | x <- xs] ++ [elem y xs | y <- ys]
