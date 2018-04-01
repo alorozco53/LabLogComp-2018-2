@@ -1,0 +1,202 @@
+\documentclass[paper=letter, fontsize=12pt]{scrartcl}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english, spanish]{babel}
+\usepackage{hyperref}
+\usepackage{amsfonts,amsthm}
+\usepackage{amsmath}
+\usepackage{listings}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{sectsty}
+\usepackage{dirtree}
+\usepackage{enumitem}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2
+}
+
+\setlength{\DTbaselineskip}{20pt}
+\DTsetlength{1em}{3em}{0.1em}{1pt}{4pt}
+
+\allsectionsfont{\raggedright\large \textit\normalfont\scshape\emph}
+
+\title{Práctica 2}
+
+\subtitle{
+  Lógica Computacional, 2018-2\\
+  Facultad de Ciencias, UNAM
+}
+
+\author{
+  \normalsize
+  Noé Salomón Hernández Sánchez\\
+  \normalsize
+  \texttt{\href{mailto:no.hernan@gmail.com}{no.hernan@gmail.com}}
+  \and
+  \normalsize
+  María del Carmen Sánchez Almanza\\
+  \normalsize
+  \texttt{\href{mailto:carmensanchez@ciencias.unam.mx}{carmensanchez@ciencias.unam.mx}}
+  \and
+  \normalsize
+  Albert Manuel Orozco Camacho\\
+  \normalsize
+  \texttt{\href{mailto:alorozco53@ciencias.unam.mx}{alorozco53@ciencias.unam.mx}}
+}
+
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Objetivo}
+
+\noindent
+La riqueza del lenguaje natural pone una limitante natural en la expresividad de la lógica\
+proposicional: resulta poco ortodoxo manejar algunos \emph{cuantificadores} (todos, algunos,\
+cada, solo) así como aspectos más generales de cualquier oración declarativa. El uso\
+de un \emph{cálculo} de \textbf{predicados} nos permite incluir en nuestro conepto semántico\
+el cumplimiento, o no, de las propiedades de un universo.\par
+De esta manera, contamos con un marco lógico-formal en el cual importa tanto el significado real\
+de cada propiedad en un universo, como la construcción sintáctica de un argumento. En este\
+contexto, Haskell nos permite codificar de manera elegante la noción de un \emph{predicado} $P$, como\
+una función binaria (a saber, \emph{booleana}) la cual se satisface cada vez que los argumentos\
+estén relacionados entre sí, de acuerdo a $P$.
+
+\section{Ejercicios}
+
+\noindent
+El esqueleto de código del ejercicio semanal se encuentra en \url{}.\
+Considere el siguiente tipo de datos, en el que se implementan los \emph{términos}\
+de la lógica de predicados:
+\begin{lstlisting}[language=Haskell]
+  data Term = VarP String
+            | Funct String [Term]
+            deriving Show
+\end{lstlisting}
+Tenemos dos constructores: \verb+VarP+ dedicado para variables y \verb+Funct+ dedicado\
+para funciones (con nombre y argumentos). Obsérvese que si la lista \verb+[Term]+ de una\
+función es nula, entonces estaremos refiriéndonos a una \textbf{constante}. Ahora,\
+considere el siguiente tipo de datos para fórmulas de la lógica de predicados:
+\begin{lstlisting}[language=Haskell]
+  data Predicate = Pred String [Term]
+                 | Neg Predicate
+                 | Conj Predicate Predicate
+                 | Disj Predicate Predicate
+                 | Imp Predicate Predicate
+                 | Equiv Predicate Predicate
+                 | All String Predicate
+                 | Ex String Predicate
+                 deriving Show
+\end{lstlisting}
+El constructor \verb+Pred+ codifica un predicado mediante un nombre (\verb+String+) y una\
+lista de argumentos (\verb+[Term]+). Aquí lo importante a destacar es que dicha lista\
+\textbf{\textit{nunca}} debe de ser nula, por definición. Por otro lado, los operadores\
+lógicos se implementan análogamente a lo que se vio en la Práctica 1, mientras que los\
+cuantificadores se especifican mediante una variable (\emph{ligada}) al predicado que tienen\
+como segundo argumento.
+
+\subsection{Sintaxis}
+
+\noindent
+Considere el tipo
+\begin{lstlisting}[language=Haskell]
+  type Sub = (String, Term)
+\end{lstlisting}
+para una sustitución en términos de la lógica de primer orden. Por ejemplo,\
+la sustitución
+\[[x := f(a)]\]
+se implementaría como una función \verb+sub1 :: Sub+ de Haskell, donde
+\begin{lstlisting}[language=Haskell]
+  sub1 :: Sub
+  sub1 = ("x", Funct "f" [Funct "a" []])
+\end{lstlisting}
+
+\begin{enumerate}
+\item Dé una función \verb+varsT+ que, dado un término, devuelva una lista que contenga\
+  todas sus variables.
+\item Dé una función \verb+varsP+ que, dada una fórmula de primer orden, devuelva una lista\
+  que contenga todas sus variables, incluyendo ligadas y no ligadas.
+\item Escriba una función \verb+subTerm+ que dado un término $t$ y una sustitución $s$,\
+  aplique $s$ en $t$. Como sugerencia, tome en cuenta la definición presentada en la\
+  Sección 2.6.1 de la Nota 06 del curso.
+\item Implemente una función \verb+subPred+ que aplique una sustitución $s$ en una fórmula\
+  de primer orden $\psi$. Es importante considerar que las variables ligadas de\
+  $\psi$ no deben de ser sustituídas, así como no repetir variables ligadas al aplicar\
+  sustituciones en variables no ligadas. Por ello, se recomienda seguir la definición\
+  presente en la Sección 2.6.2 de la Nota 06, la cual resuelve los problemas previamente\
+  mencionados mediante la introducción de \emph{variables nuevas}. (Para esto, se necesitaría\
+  realizar una función que obtenga todas las variables de una fórmula y otra que genere\
+  una variable que no haya sido utilizada previamente.)
+\end{enumerate}
+
+\subsection{Semántica}
+
+\noindent
+A continuación, mostramos los tipos necesarios para la implementación de la\
+semántica de la lógica de predicados. Éstos se basan totalmente en la explicación de\
+la Nota 08 del curso.
+\begin{lstlisting}[language=Haskell]
+type Universe a = [a]
+type Ambient a = String -> a
+type FunctCtx a = String -> [a] -> a
+type PredCtx a = String -> [a] -> Bool
+type Model a = (Universe a, Ambient a, FunctCtx a, PredCtx a)
+\end{lstlisting}
+Implementaremos un universo como una lista de elementos de un \emph{tipo} dado ($a$).\
+Dicho tipo nos servirá como ancla para definir las demás partes de un modelo:
+\begin{itemize}
+\item un \textbf{ambiente} es un mapeo entre variables y elementos de tipo $a$;
+\item un \textbf{contexto de funciones} relaciona \emph{nombres de funciones} y\
+  sus respectivas listas de argumentos con elementos de tipo $a$;
+\item un \textbf{contexto de predicados} relaciona \emph{nombres de predicados} y\
+  sus respectivas listas de argumentos con valores de verdad (\verb+Bool+);
+\item finalmente, un \textbf{modelo} es una 4-tupla formada por un universo, un\
+  ambiente, y contextos de funciones y predicados.
+\end{itemize}
+Obsérvese que la introducción de contextos de funciones y predicados permite no\
+solamente definir los nombres válidos para cada uno de éstos, sino que también\
+definir su comportamiento. Es importante señalar, que las listas de argumentos\
+de tipo \verb+[a]+ implican que, forzozamente, \emph{todos} los argumentos de cada\
+predicado o función deben de ser previamente interpretados antes de interpretar\
+el predicado o función en cuestión.
+
+\begin{enumerate}[resume]
+\item Escriba una función \verb+interpTerm+ que, dado un término $t$ y un modelo $\mathcal{M}$,
+  realice la interpretación de las variables de $t$, de acuerdo al ambiente descrito\
+  en $\mathcal{M}$. Por otro lado, deberá de interpretar cada función (y, por ende, cada constante)\
+  en $t$ de acuerdo al contexto de funciones descrito en $\mathcal{M}$.
+\item Dé una función \verb+interpPred+ que, dada una fórmula de primer orden $\psi$ y un modelo\
+  $\mathcal{M}$, decida su satisfacibilidad $\mathcal{M} \models \psi$. Para llevar esto\
+  a cabo, la implementación sugerida se debería de basar en la Definición 3 de la Nota 08\
+  del curso. Tome en cuenta que, para el caso de los cuantificadores, la interpretación\
+  requiere la realización de nuevos ambientes, a saber, $l[x \mapsto a]$ donde $l$\
+  es el ambiente dado en el modelo $\mathcal{M}$, $x$ es la variable cuantificada y $a$\
+  es una elemento del universo. Por ello se sugiere, revisar el concepto de \emph{funciones}\
+  \emph{anónimas} (lambdas), por ejemplo, de \href{http://learnyouahaskell.com/higher-order-functions#lambdas}{\texttt{éste tutorial}}.
+\end{enumerate}
+
+\section{Entrega}
+
+\noindent
+La fecha de entrega es el próximo \textbf{jueves 12 de abril de 2018} por la plataforma\
+de \emph{Google Classroom} del curso y siguiendo los lineamientos del laboratorio.
+
+\end{document}
