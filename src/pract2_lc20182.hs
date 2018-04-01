@@ -65,38 +65,6 @@ type Model a = (Universe a, Ambient a, FunctCtx a, PredCtx a)
 interpTerm :: Term -> Model a -> a
 interpTerm = error "TBD"
 
-
-exfctx :: FunctCtx Int
-exfctx "sum" args = case args of
-                      [] -> error "function not a constant!"
-                      xs -> foldl (+) 0 xs
-exfctx "prod" args = case args of
-                       [] -> error "function not a constant!"
-                       xs -> foldl (*) 1 xs
-exfctx const args = case args of
-                      [] -> read const :: Int
-                      _ -> error "constant must not have arguments"
-
-expctx :: PredCtx Int
-expctx "less" args = case args of
-                       [] -> error "arity must be >= 1 !"
-                       (x:xs) -> case xs of
-                                   [] -> error "we need at least two arguments!"
-                                   (y:_) -> x < y
-expctx "equal" args = case args of
-                        [] -> error "arity must be >= 1 !"
-                        (x:xs) -> case xs of
-                                    [] -> error "we need at least two arguments!"
-                                    (y:_) -> x == y
-
-examb :: Ambient Int
-examb "x" = 1
-examb "y" = 69
-examb "z" = -4
-examb "w" = 15
-examb _ = error "not defined!"
-
-
 -- Interpretación de predicados
 interpPred :: Predicate -> Model a -> Bool
 interpPred = error "TBD"
