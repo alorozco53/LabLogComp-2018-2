@@ -1,1 +1,1 @@
-# Ejercicio Semanal 2
+# Práctica 2
