@@ -29,12 +29,7 @@ data Predicate = Pred String [Term]           -- P(t1, t2, ..., tn)
 
 -- Sustituciones
 
-type Sub = String -> Term
-
-sub1 :: Sub
-sub1 "x" = Funct "f" [VarP "y"]
-sub1 "y" = Funct "a" []
-sub1 other = VarP other
+type Sub = (String, Term)
 
 -- Sustitución en términos
 subTerm :: Term -> Sub -> Term
