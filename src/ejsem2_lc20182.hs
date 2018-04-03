@@ -18,6 +18,7 @@ data Prop = VarP String            -- Variable proposicional
           | Disj Prop Prop         -- Φ v Ψ
           | Imp Prop Prop          -- Φ -> Ψ
           | Equiv Prop Prop        -- Φ <-> Ψ
+          deriving Eq
 
 
 -- Imprime una fórmula utilizando operadores infijos
@@ -202,3 +203,24 @@ correctTableau gamma phi = let biggamma = gamma ++ [Neg phi]
                               in and [closed branch | branch <- literalsBranches tableau]
   where
     closed b = or [compLiterals l l' | l <- b, l' <- b]
+
+test :: IO()
+test =
+  do
+    putStrLn "isLiteral"
+    putStrLn $ show $ isLiteral $ Neg $ VarP "p"
+    putStrLn $ show $ not $ isLiteral $ Conj (Neg $ VarP "p") (VarP "q")
+    putStrLn "transformProp"
+    putStrLn $ show $ (propType foo1) == Alpha
+    putStrLn $ show $ (propType $ Neg foo1) == Beta
+    putStrLn $ show $ propType foo3 == Beta
+    putStrLn "correctTableau"
+    putStrLn $ show $ correctTableau [] foo1
+    putStrLn $ show $ correctTableau [foo2, foo3] foo1
+    putStrLn $ show $ correctTableau [Imp foo1 foo2, Imp foo2 foo3] (Imp foo1 foo3)
+    putStrLn $ show $ correctTableau [Neg $ Disj foo3 foo2] (Conj (Neg foo2) (Neg foo3))
+    putStrLn $ show $ not $ correctTableau [Disj foo3 foo2] (Conj (Neg foo2) (Neg foo1))
+      where
+        foo1 = Equiv (Disj (Neg $ VarP "s") (VarP "r")) (Imp (VarP "s") (VarP "r"))
+        foo2 = Imp (Disj (Neg $ VarP "s") (VarP "r")) (Imp (VarP "s") (VarP "r"))
+        foo3 = Imp (Imp (VarP "s") (VarP "r")) (Disj (Neg $ VarP "s") (VarP "r"))
