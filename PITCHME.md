@@ -96,6 +96,28 @@ Qed.
 
 ---
 
+Un _teorema_, _lema_ o _corolario_ en Coq consta de 3 conceptos:
+
+- la declaración del enunciado a demostrar, asociándole un **nombre** único,
+- la demostración: sucesión de **tácticas** que completan objetivos de acuerdo
+  a lo establecido por el enunciado; esto inicia con la palabra reservada
+  `Proof.` y finaliza con `Qed.`,
+- _coq_ establece metas que deben ser cumplidas mediante la aplicación
+  de una secuencia de tácticas.
+
+---
+
+### Tácticas y metas
+
+Una **táctica** es el análogo a una regla de deducción natural. En _coq_ hay
+un **contexto** de proposiciones que asumimos ciertas (DEMOSTRADAS) y hay una o
+varias **metas** que han de ser logradas.
+
+Por ejemplo, la táctica `apply <PROP> in <PROP>` correspondería a realizar
+un _modus ponens_.
+
+---
+
 ### Bibliografía
 
 - https://coq.inria.fr/tutorial-nahas
