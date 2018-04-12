@@ -7,153 +7,81 @@
 
 ---
 
-# (Revisión) de tipos de datos
+# Asistente de pruebas _Coq_
 
 ---
 
-### Forma general de los tipos de datos _suma_
+**Ojo**: _Coq_ es una palabra *francesa* que significa
 
-```haskell
-data TipoNuevo t_1 t_2 ... t_k = Constructor_1 a_1_1 a_1_2 ... a_1_n
-	                           | Constructor_2 a_2_1 a_2_2 ... a_2_n
-                               |      .
-                               |      .
-                               |      .
-                               | Constructor_m a_m_1 a_m_2 ... a_m_n
-```
-
-donde los `a_i_j` y `t_i_j` son cualquier tipo definido en Haskell.
+![gallo](assets/img/gallo.jpg)
 
 ---
 
-### Árboles binarios
+### Coq...
 
-```haskell
-data BinTree a = BTNil
-               | BTBranch a (BinTree a) (BinTree a)
-               deriving (Eq, Show)
-```
-
----
-
-Lista de todas las hojas del árbol binario
-
-```haskell
-leaves :: BinTree a -> [a]
-leaves BTNil = []
-leaves (BTBranch r BTNil BTNil) = [r]
-leaves (BTBranch _ BTNil rchild) = leaves rchild
-leaves (BTBranch _ lchild BTNil) = leaves lchild
-leaves (BTBranch _ lchild rchild) = (leaves lchild) ++ (leaves rchild)
-```
-
----
-
-Cuenta el número de hojas en el árbol dado
-
-```haskell
-nLeaves :: BinTree a -> Nat
-nLeaves tree = intToNat $ length $ leaves tree
-```
+<ul>
+	<li class="fragment">
+		Es un asistente de demostraciones formales. En la práctica, es posible
+		tener _errores humanos_ al realizar una prueba: *coq* ayuda en evitar
+		dichas erratas.
+	</li>
+	<li class="fragment">
+		Por otro lado, se emplea para probar la correctud de objetos formales de
+		gran complejidad:
+	</li>
+	<ul>
+  		<li class="fragment">**Verificación de Software**</li>
+  		<li class="fragment">
+		[**El Teorema de los 4 colores**](https://www.ams.org/notices/200811/tx081101382p.pdf)
+		</li>
+	</ul>
+</ul>
 
 ---
 
-Cuenta el número de nodos internos (ramas) del árbol
-SIN hacer recursión directamente
+### Coq...
 
-```haskell
-nBranches :: BinTree a -> Nat
-nBranches tree = intToNat $ n - l
-  where
-    n = natToInt $ nNodes tree
-    l = natToInt $ nLeaves tree
-```
-
-**Extra**: implementar `nNodes`.
-
----
-
-
-Inserción _a la_ **árbol de búsqueda binaria**
-
-```haskell
-insertBST :: (Ord a) =>  a -> BinTree a -> BinTree a
-insertBST x BTNil = BTBranch x BTNil BTNil
-insertBST x (BTBranch r lchild rchild)
-  | x <= r = BTBranch r (insertBST x lchild) rchild
-  | otherwise = BTBranch r lchild (insertBST x rchild)
-```
+<ul>
+	<li class="fragment">
+		Posee tres lenguajes de _scripting_ para especificar
+		_comandos_, _tácticas_ de demostración y _teorías_.
+	</li>
+	<li class="fragment">
+		El más importante se llama **Gallina** y lo vamos a usar
+		para especificar el cálcuo de predicados y proposiciones.
+	</li>
+</ul>
 
 ---
 
-
-Pero, ¿qué acaba de ocurrir?
-
----
-
-- Composición de funciones
-- `($) :: (a -> b) -> a -> b` (agrupamiento de expresiones a la derecha)
-- Análisis de casos dependiendo de los argumentos del constructor
-  (usando notación `|` y `otherwise`).
+### Instalación
 
 ---
 
-No me gusta cómo Haskell imprime las cosas...
-
-# ¿Cómo _personalizar_ la impresión de tipos de datos?
-
----
-
-```haskell
-instance Show a => Show TipoNuevo where
-  show Constructor_1 ... = ...
-  show Constructor_2 ... = ...
-  .
-  .
-  .
-  show Constructor_m ... = ...
-```
-
-Es decir, el `TipoNuevo` se hace instancia de la clase `Show`, que es la
-responsable de realizar el **efecto secundario** de imprimir en pantalla.
-Finalmente, se define la función `show` cazando todos los patrones del tipo nuevo.
+ - https://coq.inria.fr/download
+ - https://github.com/coq/coq/releases/tag/V8.7.2 
+   (_instaladores para Windows y Mac OS X_)
+ - `sudo apt-get install coq coqide` (_Linux_)
+ - `brew install coq` (_Mac OS X_)
 
 ---
 
-### Impresión _elegante_ de árboles binarios
+Esto debería instalar
 
-```haskell
-instance Show a => Show (BinTree a) where
-  show btree = showAux btree ""
-    where
-      showAux BTNil acc = "Nil"
-      showAux (BTBranch r lchild rchild) acc = let newacc = acc ++ "\t"
-                                               in "Branch " ++ show r ++
-                                                  "\n" ++ newacc ++ showAux rchild newacc ++
-                                                  "\n" ++ newacc ++ showAux lchild newacc
-```
----
-
-# Ejercicios para puntos extras
+- `coqtop`: una línea de comandos interactiva,
+- `CoqIDE`: una interfaz gráfica **MUY** útil para nuestros menesteres.
 
 ---
 
-- Dé una función que calcule el máximo común divisor de dos números enteros.
-- Escriba un tipo de datos para representar un árbol binario de tipo genérico
-  (`BinTree a`).
-- Dada una lista `xs` de tipo `[Char]`, construya la lista de tipo `[BinTree Char]`
-  que contiene todos los árboles binarios posibles con los elementos de `xs`
-  y que están ordenados (es decir, árboles _de búsqueda binaria_).
+### Recomendación
 
----
-
-- Implementar recorridos `preorder`, `inorder` y `postorder`
-- Desarrollar un algoritmo de ordenamiento basado en árboles de búsqueda binaria.
-- Implementar búsqueda binaria en una lista ordenada
+Si usas Emacs, revisar [ProofGeneral](https://proofgeneral.github.io),
+un paquete para dicho editor que permite correr el asistente de pruebas
+dentro del mismo.
 
 ---
 
 ### Bibliografía
 
-- http://learnyouahaskell.com/chapters
-- https://drive.google.com/file/d/17atMecWDziidvmdX60klMGBnQtOhTQQf/view?usp=sharing
+- https://coq.inria.fr/tutorial-nahas
+- https://coq.inria.fr/tutorial/1-basic-predicate-calculus
