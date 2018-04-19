@@ -118,9 +118,15 @@ un _modus ponens_.
 
 ---
 
-![wumpus](assets/img/wumpus.jpg)]
+![wumpus](assets/img/wumpus.jpg)
+
+---
 
 https://www.youtube.com/watch?v=tAy-uxBZBNQ
+
+---
+
+![wumpusworld](assets/img/wumpusworld.png)
 
 ---
 
