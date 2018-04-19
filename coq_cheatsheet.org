@@ -12,5 +12,26 @@ natural y tácticas de =Coq=.
 | Operador             | Táctica en =Coq=      |
 |----------------------+-----------------------|
 | \to (/modus ponens/) | =apply <H0> in <H1>.= |
-| \wedge               | =split.=              |
-| \vee                 |                       |
+| \neg                 | =unfold not in <H>.=  |
+| \wedge               | =right.=              |
+| \wedge               | =left.=               |
+| \vee                 | =elim <H>.=           |
+| \vee                 | =case <H>.=           |
+| \leftrightarrow      | =split.=              |
+| \exists              | =destruct <H>.=       |
+| \forall              | =intros.=             |
+
+
+* Reglas de introducción
+
+| Operador        | Táctica en =Coq=                 |
+|-----------------+----------------------------------|
+| \to             | =intros.=                        |
+| \neg            | =unfold not.=                    |
+| \to             | =refine (<H0> <H1> ... <Hn> _).= |
+| \wedge          | =split.=                         |
+| \vee            | =left=                           |
+| \vee            | =right=                          |
+| \leftrightarrow | =case <H>.=                      |
+| \exists         | =specialize (<H> <x>).=          |
+| \forall         | =specialize (<H> <x>).=          |
