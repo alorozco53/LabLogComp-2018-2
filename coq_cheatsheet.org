@@ -1,0 +1,15 @@
+#+TITLE: Hoja de trucos para Coq
+
+#+LATEX_HEADER: \usepackage[english, spanish]{babel}
+#+OPTIONS: author:nil
+#+OPTIONS: toc:nil
+
+A continuación se presentan algunas equivalencias importantes entre reglas de deducción
+natural y tácticas de \texttt{Coq}.
+
+* Reglas de introducción
+
+| Operador | Táctica en Coq |
+|----------+----------------|
+| $\to$    |           1234 |
+| Anna     |           4321 |
