@@ -127,7 +127,7 @@ https://www.youtube.com/watch?v=tAy-uxBZBNQ
 ---
 
 <img src="assets/img/wumpusworld.png"
-alt="wumpusworld" width="240" height="180" border="10" />
+alt="wumpusworld" width="540" height="380" border="10" />
 
 ---
 
