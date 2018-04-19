@@ -59,7 +59,7 @@
 ---
 
  - https://coq.inria.fr/download
- - https://github.com/coq/coq/releases/tag/V8.7.2 
+ - https://github.com/coq/coq/releases/tag/V8.7.2
    (_instaladores para Windows y Mac OS X_)
  - `sudo apt-get install coq coqide` (_Linux_)
  - `brew install coq` (_Mac OS X_)
@@ -110,11 +110,15 @@ Un _teorema_, _lema_ o _corolario_ en Coq consta de 3 conceptos:
 ### Tácticas y metas
 
 Una **táctica** es el análogo a una regla de deducción natural. En _coq_ hay
-un **contexto** de proposiciones que asumimos ciertas (DEMOSTRADAS) y hay una o
+un **contexto** de hipótesis que asumimos ciertas (DEMOSTRADAS) y hay una o
 varias **metas** que han de ser logradas.
 
 Por ejemplo, la táctica `apply <PROP> in <PROP>` correspondería a realizar
 un _modus ponens_.
+
+---
+
+[![wumpus](assets/img/wumpus.jpg)](https://www.youtube.com/watch?v=tAy-uxBZBNQ)
 
 ---
 
