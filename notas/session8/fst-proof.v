@@ -36,7 +36,7 @@ Proof.
   apply H0 in H.
   exact H.
 Qed.
-  
+
 Theorem proof3 : (forall A B: Prop, (A -> B -> (A /\ B))).
 Proof.
  intros.
@@ -146,7 +146,7 @@ Proof.
 Qed.
 
 Lemma ex1 :
-  (forall P Q R S : Prop, ((~P \/ Q -> R) /\ ~S /\ (~S -> Q /\ P)) -> R). 
+  (forall P Q R S : Prop, ((~P \/ Q -> R) /\ ~S /\ (~S -> Q /\ P)) -> R).
 Proof.
   intros.
   destruct H.
@@ -156,4 +156,34 @@ Proof.
   refine (H _).
   right.
   exact H0.
+Qed.
+
+Lemma int_or_ex :
+  (forall Q R : Prop, (Q -> R) /\ (R -> Q) -> (Q <-> R)).
+Proof.
+  intros.
+  destruct H.
+  split.
+  exact H.
+  exact H0.
+Qed.
+
+Lemma simple_fol :
+  ((forall x : D, P x) /\ (forall x : D, Q x) -> (forall x : D, P x /\ Q x)).
+Proof.
+  intros.
+  destruct H.
+  specialize (H x).
+  specialize (H0 x).
+  split.
+  exact H.
+  exact H0.
+Qed.
+
+Theorem false_cannot_be_proven :
+  (~False).
+Proof.
+  unfold not.
+  intros.
+  trivial.
 Qed.
