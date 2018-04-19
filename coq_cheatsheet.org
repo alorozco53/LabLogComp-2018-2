@@ -11,5 +11,5 @@ natural y tácticas de \texttt{Coq}.
 
 | Operador | Táctica en Coq |
 |----------+----------------|
-| $\to$    |           1234 |
+| \to      |           1234 |
 | Anna     |           4321 |
