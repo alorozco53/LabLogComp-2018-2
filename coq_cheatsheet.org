@@ -7,9 +7,10 @@
 A continuación se presentan algunas equivalencias importantes entre reglas de deducción
 natural y tácticas de =Coq=.
 
-* Reglas de introducción
+* Reglas de eliminación
 
-| Operador | Táctica en =Coq= |
-|----------+------------------|
-| \to      |             1234 |
-| Anna     |             4321 |
+| Operador             | Táctica en =Coq=      |
+|----------------------+-----------------------|
+| \to (/modus ponens/) | =apply <H0> in <H1>.= |
+| \wedge               | =split.=              |
+| \vee                 |                       |
