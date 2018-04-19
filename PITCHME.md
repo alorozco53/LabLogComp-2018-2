@@ -118,7 +118,9 @@ un _modus ponens_.
 
 ---
 
-[![wumpus](assets/img/wumpus.jpg)](https://www.youtube.com/watch?v=tAy-uxBZBNQ)
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=tAy-uxBZBNQ
+" target="_blank"><img src="assets/img/wumpus.jpg"
+alt="wumpus" width="240" height="180" border="10" /></a>
 
 ---
 
