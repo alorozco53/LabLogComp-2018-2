@@ -180,10 +180,20 @@ Proof.
   exact H0.
 Qed.
 
+
 Theorem false_cannot_be_proven :
   (~False).
 Proof.
   unfold not.
   intros.
   trivial.
+Qed.
+
+Lemma l2 :
+  (forall A B : Prop, (A /\ B) -> A \/ B).
+Proof.
+  intros.
+  right.
+  destruct H.
+  exact H0.
 Qed.
