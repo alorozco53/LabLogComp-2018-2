@@ -262,9 +262,9 @@ Queremos, entonces, ayudarle al jugador a decidir correctamente que la casilla \
 una opción segura para continuar con su trayecto. Para ello, necesitamos mostrar\
 formalmente que $\neg P_{2,2} \wedge \neg W_{2,2}$. Para finalizar con la implementación en\
 \verb+Coq+, se recomienda asumir las hipótesis (H1 - H11) previamente presentadas mediante\
-enunciados \verb+Assumption+. Por ejemplo,
+enunciados \verb+Axiom+. Por ejemplo,
 \begin{verbatim}
-Assumption H2 : B 1 1 <-> (P 2 1 \/ P 1 2).
+Axiom H2 : B 1 1 <-> (P 2 1 \/ P 1 2).
 \end{verbatim}\par
 Se recomienda realizar la solución de este problema en un archivo aparte de los demás de la práctica.
 
