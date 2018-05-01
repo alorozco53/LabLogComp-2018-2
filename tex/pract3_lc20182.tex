@@ -4,13 +4,16 @@
 \usepackage[utf8]{inputenc}
 \usepackage[english, spanish]{babel}
 \usepackage{hyperref}
-\usepackage{amsfonts,amsthm}
+\usepackage{amsfonts,amsthm,amssymb}
 \usepackage{amsmath}
 \usepackage{listings}
 \usepackage[dvipsnames]{xcolor}
 \usepackage{sectsty}
 \usepackage{dirtree}
+\usepackage{booktabs}
 \usepackage{enumitem}
+\usepackage{graphicx}
+\graphicspath{ {img/} }
 
 \lstdefinestyle{mystyle}{
     backgroundcolor=\color{backcolour},
@@ -36,7 +39,7 @@
 
 \allsectionsfont{\raggedright\large \textit\normalfont\scshape\emph}
 
-\title{Práctica 2}
+\title{Práctica 3}
 
 \subtitle{
   Lógica Computacional, 2018-2\\
@@ -69,134 +72,206 @@
 \section{Objetivo}
 
 \noindent
-La riqueza del lenguaje natural pone una limitante natural en la expresividad de la lógica\
-proposicional: resulta poco ortodoxo manejar algunos \emph{cuantificadores} (todos, algunos,\
-cada, solo) así como aspectos más generales de cualquier oración declarativa. El uso\
-de un \emph{cálculo} de \textbf{predicados} nos permite incluir en nuestro conepto semántico\
-el cumplimiento, o no, de las propiedades de un universo.\par
-De esta manera, contamos con un marco lógico-formal en el cual importa tanto el significado real\
-de cada propiedad en un universo, como la construcción sintáctica de un argumento. En este\
-contexto, Haskell nos permite codificar de manera elegante la noción de un \emph{predicado} $P$, como\
-una función binaria (a saber, \emph{booleana}) la cual se satisface cada vez que los argumentos\
-estén relacionados entre sí, de acuerdo a $P$.
+Los asistentes automáticos de demostraciones nos brindan un paradigma especial\
+de lo que implica escribir una prueba formal: en cada momento nos planteamos un\
+objetivo al que hemos de llegar mediante argumentos bien fundamentados. Para este\
+curso, el algoritmo de verificación de fórmulas derivado de las reglas de deducción\
+natural motivan al uso de una herramienta como \verb+Coq+.\par
+Mediante el asistente de pruebas francés exploraremos otro de los métodos de\
+resolución del problema de satisfacibilidad, cuya eficiencia depende de la destreza\
+del programador entorno a su uso. A pesar de que restringiremos el uso de \verb+Coq+\
+a fórmulas de los cálculos vistos en el curso, es importante notar y destacar su uso\
+para tareas como \emph{verificación de software} y \emph{razonamiento automatizado},\
+las cuales están adquiriendo mayor preponderancia en el mundo computacional moderno.
 
 \section{Ejercicios}
 
 \noindent
-El esqueleto de código del ejercicio semanal se encuentra en \url{}.\
-Considere el siguiente tipo de datos, en el que se implementan los \emph{términos}\
-de la lógica de predicados:
-\begin{lstlisting}[language=Haskell]
-  data Term = VarP String
-            | Funct String [Term]
-            deriving Show
-\end{lstlisting}
-Tenemos dos constructores: \verb+VarP+ dedicado para variables y \verb+Funct+ dedicado\
-para funciones (con nombre y argumentos). Obsérvese que si la lista \verb+[Term]+ de una\
-función es nula, entonces estaremos refiriéndonos a una \textbf{constante}. Ahora,\
-considere el siguiente tipo de datos para fórmulas de la lógica de predicados:
-\begin{lstlisting}[language=Haskell]
-  data Predicate = Pred String [Term]
-                 | Neg Predicate
-                 | Conj Predicate Predicate
-                 | Disj Predicate Predicate
-                 | Imp Predicate Predicate
-                 | Equiv Predicate Predicate
-                 | All String Predicate
-                 | Ex String Predicate
-                 deriving Show
-\end{lstlisting}
-El constructor \verb+Pred+ codifica un predicado mediante un nombre (\verb+String+) y una\
-lista de argumentos (\verb+[Term]+). Aquí lo importante a destacar es que dicha lista\
-\textbf{\textit{nunca}} debe de ser nula, por definición. Por otro lado, los operadores\
-lógicos se implementan análogamente a lo que se vio en la Práctica 1, mientras que los\
-cuantificadores se especifican mediante una variable (\emph{ligada}) al predicado que tienen\
-como segundo argumento.
+El esqueleto de código de la práctica se encuentra en \url{https://github.com/alorozco53/LabLogComp-2018-2/tree/pract3/src}.\
+Asegúrese de haber instalado \verb+CoqIDE+ o \verb+ProofGeneral+ en su computadora,\
+mediante el \href{https://github.com/alorozco53/LabLogComp-2018-2/blob/master/notas/session9/coq.md}{\underline{tutorial presentado en clase}}.
 
-\subsection{Sintaxis}
+\subsection{Correctud de fórmulas}
 
 \noindent
-Considere el tipo
-\begin{lstlisting}[language=Haskell]
-  type Sub = (String, Term)
-\end{lstlisting}
-para una sustitución en términos de la lógica de primer orden. Por ejemplo,\
-la sustitución
-\[[x := f(a)]\]
-se implementaría como una función \verb+sub1 :: Sub+ de Haskell, donde
-\begin{lstlisting}[language=Haskell]
-  sub1 :: Sub
-  sub1 = ("x", Funct "f" [Funct "a" []])
-\end{lstlisting}
+Para las siguientes fórmulas, dé una demostración basada en tácticas de Coq.
 
 \begin{enumerate}
-\item Dé una función \verb+varsT+ que, dado un término, devuelva una lista que contenga\
-  todas sus variables.
-\item Dé una función \verb+varsP+ que, dada una fórmula de primer orden, devuelva una lista\
-  que contenga todas sus variables, incluyendo ligadas y no ligadas.
-\item Escriba una función \verb+subTerm+ que dado un término $t$ y una sustitución $s$,\
-  aplique $s$ en $t$. Como sugerencia, tome en cuenta la definición presentada en la\
-  Sección 2.6.1 de la Nota 06 del curso.
-\item Implemente una función \verb+subPred+ que aplique una sustitución $s$ en una fórmula\
-  de primer orden $\psi$. Es importante considerar que las variables ligadas de\
-  $\psi$ no deben de ser sustituídas, así como no repetir variables ligadas al aplicar\
-  sustituciones en variables no ligadas. Por ello, se recomienda seguir la definición\
-  presente en la Sección 2.6.2 de la Nota 06, la cual resuelve los problemas previamente\
-  mencionados mediante la introducción de \emph{variables nuevas}. (Para esto, se necesitaría\
-  realizar una función que obtenga todas las variables de una fórmula y otra que genere\
-  una variable que no haya sido utilizada previamente.)
+\item $p \to q, q \to r \vee s, \neg s, p \vdash r$.
+\item $\vdash (p \to q) \to (p \vee r \to q \vee r)$. \emph{Consejo}: dé una demostración\
+  \emph{por reducción al absurdo} mediante el uso de una doble negación del consecuente de la fórmula.\
+  Es decir, recuerde que para toda fórmula $A$ y $B$,
+  \[A \to B \equiv A \to \neg \neg B.\]
+\item
+  \begin{equation*}
+    \begin{aligned}
+      &\exists x Q(x)\\
+      &\forall x (Q(x) \wedge \exists y P(y) \to Q(f(x)))\\
+      &\forall z (Q(z) \to Q(g(z)))\\
+      \midrule
+      &\therefore P(b) \to \exists w Q(f(g(w)))
+    \end{aligned}
+  \end{equation*}
+  Recuerde que se debe de definir un universo de discurso (\verb+D+) y que los predicados se modelan\
+  mediante un tipo que toma cuantos valores indique su aridad para ``devolver'' algo de tipo \verb+Prop+.\
+  Por ejemplo, el predicado $P$ tendría tipo \verb+D -> Prop+. Asímismo, no olvide definir la constante\
+  $b$ como \verb+Variable+ de tipo \verb+D+ y las variables $f$ y $g$ ambas como \verb+Variable+ de tipo\
+  \verb+D -> D+.
+\item
+  \begin{equation*}
+    \begin{aligned}
+      &\exists x (\neg P(x) \vee Q(x))\\
+      \midrule
+      &\therefore \exists x \neg (P(x) \wedge \neg Q(x))
+    \end{aligned}
+  \end{equation*}
+\item
+  \begin{equation*}
+    \begin{aligned}
+      &\forall x (P(x) \to Q(x))\\
+      &\forall y (R(b) \vee Q(y) \to S(a))\\
+      \midrule
+      &\therefore \forall z (P(z) \to \exists y S(y))
+    \end{aligned}
+  \end{equation*}
 \end{enumerate}
 
-\subsection{Semántica}
+\subsection{Traducción y verificación}
 
 \noindent
-A continuación, mostramos los tipos necesarios para la implementación de la\
-semántica de la lógica de predicados. Éstos se basan totalmente en la explicación de\
-la Nota 08 del curso.
-\begin{lstlisting}[language=Haskell]
-type Universe a = [a]
-type Ambient a = String -> a
-type FunctCtx a = String -> [a] -> a
-type PredCtx a = String -> [a] -> Bool
-type Model a = (Universe a, Ambient a, FunctCtx a, PredCtx a)
-\end{lstlisting}
-Implementaremos un universo como una lista de elementos de un \emph{tipo} dado ($a$).\
-Dicho tipo nos servirá como ancla para definir las demás partes de un modelo:
-\begin{itemize}
-\item un \textbf{ambiente} es un mapeo entre variables y elementos de tipo $a$;
-\item un \textbf{contexto de funciones} relaciona \emph{nombres de funciones} y\
-  sus respectivas listas de argumentos con elementos de tipo $a$;
-\item un \textbf{contexto de predicados} relaciona \emph{nombres de predicados} y\
-  sus respectivas listas de argumentos con valores de verdad (\verb+Bool+);
-\item finalmente, un \textbf{modelo} es una 4-tupla formada por un universo, un\
-  ambiente, y contextos de funciones y predicados.
-\end{itemize}
-Obsérvese que la introducción de contextos de funciones y predicados permite no\
-solamente definir los nombres válidos para cada uno de éstos, sino que también\
-definir su comportamiento. Es importante señalar, que las listas de argumentos\
-de tipo \verb+[a]+ implican que, forzozamente, \emph{todos} los argumentos de cada\
-predicado o función deben de ser previamente interpretados antes de interpretar\
-el predicado o función en cuestión.
+Demostrar la correctud de los siguientes argumentos.
 
 \begin{enumerate}[resume]
-\item Escriba una función \verb+interpTerm+ que, dado un término $t$ y un modelo $\mathcal{M}$,
-  realice la interpretación de las variables de $t$, de acuerdo al ambiente descrito\
-  en $\mathcal{M}$. Por otro lado, deberá de interpretar cada función (y, por ende, cada constante)\
-  en $t$ de acuerdo al contexto de funciones descrito en $\mathcal{M}$.
-\item Dé una función \verb+interpPred+ que, dada una fórmula de primer orden $\psi$ y un modelo\
-  $\mathcal{M}$, decida su satisfacibilidad $\mathcal{M} \models \psi$. Para llevar esto\
-  a cabo, la implementación sugerida se debería de basar en la Definición 3 de la Nota 08\
-  del curso. Tome en cuenta que, para el caso de los cuantificadores, la interpretación\
-  requiere la realización de nuevos ambientes, a saber, $l[x \mapsto a]$ donde $l$\
-  es el ambiente dado en el modelo $\mathcal{M}$, $x$ es la variable cuantificada y $a$\
-  es una elemento del universo. Por ello se sugiere, revisar el concepto de \emph{funciones}\
-  \emph{anónimas} (lambdas), por ejemplo, de \href{http://learnyouahaskell.com/higher-order-functions#lambdas}{\texttt{éste tutorial}}.
+\item Usando exclusivamente la signatura $\{F^{(1)}, V^{(1)}, B^{(1)}, E^{(1)}, A^{(1)}, L^{(1)}, S^{(1)}, C^{(2)}\}$\
+  con significados \textit{ser feliz, ser vampiro, ser bruja, emborracharse, pernoctar en cementerio,}
+  \textit{violar la ley, ser sepulturero, convivir}, respectivamente, demostrar usando tácticas que:
+  \begin{center}
+    \textit{
+      Un vampiro sólo es feliz si se emborracha o pernocta en un cementerio. Quien pernocta en un
+      cementerio viola la ley o es sepulturero. Una bruja sólo es feliz si convive con un vampiro feliz,
+      que no se emborracha y que no viola la ley. Hay brujas felices. Por lo tanto algunos vampiros
+      son sepultureros.
+    }
+  \end{center}
+\item Harry Potter estaba teniendo dificultades para resolver una pista en la penúltima\
+  prueba del Torneo de los Tres Magos. La prueba consiste en revisar la validez del argumento\
+  siguiente:
+    \begin{center}
+      \textit{
+        El Patronum lo hizo Snape o, hay que jugar Quidditch y molestar a Ron. Si el
+        Patronum lo hizo Snape, hay que jugar Quidditch. Hay que jugar Quidditch si y sólo si
+        Slytherin es la mejor casa de Hogwarts. Por lo tanto, hay que jugar Quidditch y Slytherin
+        es la mejor casa de Hogwarts.
+      }
+    \end{center}
+    Ayude a Harry Potter a pasar a la siguiente fase, dándole una serie de tácticas de \verb+Coq+\
+    que verifiquen su argumento.
 \end{enumerate}
+
+\subsection{Un agente racional}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.5\textwidth]{wumpusworld}
+  \caption[CAPTION WUMPUS]{
+    El tablero del \emph{mundo de wumpus}. El agente, inicialmente, se encuentra en la
+    casilla \texttt{[1,1]} y debe de averiguar la mejor estrategia que le conduzca al
+    bloque de oro (casilla \texttt{[2,3]}) sin entrar en contacto con el monstruo y
+    sin caer en un pozo (\emph{PIT}). Tomado de \footnotemark.
+  }
+  \label{wumpusfig}
+\end{figure}
+\footnotetext{\url{http://www.cs.uku.fi/~mnykanen/TEK/teklectures6.pdf}}
+
+\noindent
+En el mundo de \emph{wumpus} (término inglés para referirse a una especie de monstruo)\
+un jugador debe de explorar un camino lleno de peligros con el fin de encontrar\
+el bloque de oro que le dé la victoria. El juego presentado en este apartado es\
+(casi) equivalente al utilizado dentro del libro \emph{Artificial Intelligence: A Modern Approach}%
+\footnote{\url{http://aima.cs.berkeley.edu}}.\par
+El mundo de \emph{wumpus} consta de una cuadrícula; el jugador inicialmente comienza su aventura\
+en una de las esquinas y su objetivo es regresar a su posición inicial con el bloque de oro en\
+su haber. El personaje únicamente se puede mover horizontal y verticalmente en un entorno\
+que contiene algunas casillas que le harían perdedor automáticamente de entrar en ellas:
+\begin{itemize}
+\item hay un \textbf{monstruo} hediondo, el cual es capaz de comerse vivo al personaje y
+\item existen varias casillas con \textbf{pozos} (\emph{PIT}), los cuales pueden succionar al protagonista\
+  al más allá.
+\end{itemize}\par
+Afortunadamente existen algunas pistas que le permitirán al jugador esquivar las casillas peligrosas\
+para sí mismo. Si el jugador se encuentra en la casilla \verb+[i,j]+ (donde \verb+i+ indica la posición\
+horizontal de izquierda a derecha y \verb+j+ indica la posición vertical de abajo hacia arriba),\
+entonces éste puede identificar la existencia del monstruo o de un pozo en una casilla adyacente:
+\begin{itemize}
+\item El fuerte olor del monstruo, despide un hedor (\emph{STENCH}) que se percibe\
+  en las casillas vertical y horizontalmente adyacentes.
+\item El poder succionador de un pozo, ocasiona que se sienta una brisa (\emph{BREEZE})\
+  en las casillas vertical y horizontalmente adyacentes.
+\end{itemize}\par
+Habiendo establecido lo anterior, modelamos el mundo de \emph{wumpus} mediante las siguientes\
+variables proposicionales:
+\begin{itemize}
+\item $P_{i,j}$ \emph{si y sólo si} hay un pozo en la casilla \verb+[i,j]+;
+\item $W_{i,j}$ \emph{si y sólo si} está el monstruo en la casilla \verb+[i,j]+;
+\item $B_{i,j}$ \emph{si y sólo si} se siente una brisa en la casilla \verb+[i,j]+;
+\item $S_{i,j}$ \emph{si y sólo si} se percibe mal olor en la casilla \verb+[i,j]+.
+\end{itemize}\par
+De las anteriores definiciones, de pueden (¡y deben!) deducir algunas equivalencias dadas las pistas,\
+de percepción que posee el jugador. Por ejemplo la sensación de brisa en la casilla \verb+[i,j]+\
+equivale a la existencia de un pozo en alguna de las casillas \verb_[i+1,j]_, \verb_[i,j+1]_,\
+\verb_[i-1,j]_ ó \verb_[i,j-1]_, a saber,
+\begin{equation}
+  B_{i,j} \leftrightarrow (P_{i+1,j} \vee P_{i,j+1} \vee P_{i-1,j} \vee P_{i,j-1}).\label{pot-breeze-equiv}
+\end{equation}\par
+Para la implementación en \verb+Coq+, definimos las variables anteriormente establecidas, mediante tipos\
+que toman dos números naturales y devuelven el tipo \verb+Prop+. Por ejemplo, $S_{i,j}$ se definiría con el\
+enunciado:
+\begin{verbatim}
+Variable S : nat -> nat -> Prop.
+\end{verbatim}\par
+Obsérvese que estamos trabajando únicamente con lógica proposicional. En \verb+Coq+, decir que hay un pozo en\
+la casilla \verb+[3,5]+ se expresa mediante \verb+P 3 5+. De esta manera, cualquier expresión que posea los\
+dos números que indican la posición de las casillas es, en sí, una variable proposicional; por ejemplo,\
+se puede demostrar el siguiente teorema trivial:
+\begin{verbatim}
+((P 1 1 -> W 4 6) /\ P 1 1) -> W 4 6.
+\end{verbatim}\par
+Supongamos que el jugador desarrolla su partida como en la cuadrícula de la Figura \ref{wumpusfig}.\
+Inicialmente, no hay ni pozo ni monstruo en la casilla inicial:
+\begin{enumerate}[label=H\arabic*]
+\item $\neg P_{1,1} \wedge \neg W_{1,1}$.
+\end{enumerate}\par
+Más aún, supongamos que el jugador ya ha visitado las casillas \verb+[1,2]+ y \verb+[2,1]+, por lo que\
+es conocimimento del jugador las siguientes equivalencias, del estilo de la Ecuación \ref{pot-breeze-equiv}:
+\begin{enumerate}[label=H\arabic*, resume]
+\item $B_{1,1} \leftrightarrow (P_{2,1} \vee P_{1,2})$,
+\item $S_{1,1} \leftrightarrow (W_{2,1} \vee W_{1,2})$,
+\item $B_{2,1} \leftrightarrow (P_{1,1} \vee P_{2,2} \vee P_{3,1})$,
+\item $S_{1,2} \leftrightarrow (W_{1,1} \vee W_{2,2} \vee W_{1,3})$.
+\end{enumerate}\par
+Además, se tiene como hecho lo siguiente:
+\begin{enumerate}[label=H\arabic*, resume]
+\item $\neg B_{1,1}$,
+\item $\neg S_{1,1}$,
+\item $\neg B_{1,2}$,
+\item $\neg S_{2,1}$,
+\item $S_{1,2}$,
+\item $B_{2,1}$.
+\end{enumerate}
+Queremos, entonces, ayudarle al jugador a decidir correctamente que la casilla \verb+[2,2]+ es\
+una opción segura para continuar con su trayecto. Para ello, necesitamos mostrar\
+formalmente que $\neg P_{2,2} \wedge \neg W_{2,2}$. Para finalizar con la implementación en\
+\verb+Coq+, se recomienda asumir las hipótesis (H1 - H11) previamente presentadas mediante\
+enunciados \verb+Assumption+. Por ejemplo,
+\begin{verbatim}
+Assumption H2 : B 1 1 <-> (P 2 1 \/ P 1 2).
+\end{verbatim}\par
+Se recomienda realizar la solución de este problema en un archivo aparte de los demás de la práctica.
 
 \section{Entrega}
 
 \noindent
-La fecha de entrega es el próximo \textbf{jueves 12 de abril de 2018} por la plataforma\
+La fecha de entrega es el próximo \textbf{viernes 11 de mayo de 2018} por la plataforma\
 de \emph{Google Classroom} del curso y siguiendo los lineamientos del laboratorio.
 
 \end{document}
