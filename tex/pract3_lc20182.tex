@@ -142,7 +142,7 @@ Para las siguientes fórmulas, dé una demostración basada en tácticas de Coq.
 Demostrar la correctud de los siguientes argumentos.
 
 \begin{enumerate}[resume]
-\item Usando exclusivamente la signatura $\{F^{(1)}, V^{(1)}, B^{(1)}, E^{(1)}, A^{(1)}, L^{(1)}, S^{(1)}, C^{(2)}\}$\
+\item Usando exclusivamente la signatura $\{F^{(1)}, V^{(1)}, B^{(1)}, E^{(1)}, P^{(1)}, L^{(1)}, S^{(1)}, C^{(2)}\}$\
   con significados \textit{ser feliz, ser vampiro, ser bruja, emborracharse, pernoctar en cementerio,}
   \textit{violar la ley, ser sepulturero, convivir}, respectivamente, demostrar usando tácticas que:
   \begin{center}
@@ -262,9 +262,9 @@ Queremos, entonces, ayudarle al jugador a decidir correctamente que la casilla \
 una opción segura para continuar con su trayecto. Para ello, necesitamos mostrar\
 formalmente que $\neg P_{2,2} \wedge \neg W_{2,2}$. Para finalizar con la implementación en\
 \verb+Coq+, se recomienda asumir las hipótesis (H1 - H11) previamente presentadas mediante\
-enunciados \verb+Axiom+. Por ejemplo,
+enunciados \verb+Definition+. Por ejemplo,
 \begin{verbatim}
-Axiom H2 : B 1 1 <-> (P 2 1 \/ P 1 2).
+Definition H2 : B 1 1 <-> (P 2 1 \/ P 1 2).
 \end{verbatim}\par
 Se recomienda realizar la solución de este problema en un archivo aparte de los demás de la práctica.
 
