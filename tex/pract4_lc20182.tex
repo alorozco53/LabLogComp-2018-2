@@ -1,0 +1,138 @@
+\documentclass[paper=letter, fontsize=12pt]{scrartcl}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english, spanish]{babel}
+\usepackage{hyperref}
+\usepackage{amsfonts,amsthm,amssymb}
+\usepackage{amsmath}
+\usepackage{listings}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{sectsty}
+\usepackage{dirtree}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\graphicspath{ {img/} }
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2
+}
+
+\setlength{\DTbaselineskip}{20pt}
+\DTsetlength{1em}{3em}{0.1em}{1pt}{4pt}
+
+\allsectionsfont{\raggedright\large \textit\normalfont\scshape\emph}
+
+\title{Práctica 4}
+
+\subtitle{
+  Lógica Computacional, 2018-2\\
+  Facultad de Ciencias, UNAM
+}
+
+\author{
+  \normalsize
+  Noé Salomón Hernández Sánchez\\
+  \normalsize
+  \texttt{\href{mailto:no.hernan@gmail.com}{no.hernan@gmail.com}}
+  \and
+  \normalsize
+  María del Carmen Sánchez Almanza\\
+  \normalsize
+  \texttt{\href{mailto:carmensanchez@ciencias.unam.mx}{carmensanchez@ciencias.unam.mx}}
+  \and
+  \normalsize
+  Albert Manuel Orozco Camacho\\
+  \normalsize
+  \texttt{\href{mailto:alorozco53@ciencias.unam.mx}{alorozco53@ciencias.unam.mx}}
+}
+
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Ejercicios}
+
+Los ejercicios siguientes serán realizados en \verb+Prolog+.
+
+\subsection{Árboles binarios}
+
+Considere a los términos \verb+btnil/0+ y \verb+btbranch/3+ que codifican un árbol binario\
+(vacío y un rama con dos hijos, respectivamente). El siguiente predicado asegura la construcción\
+de un árbol binario de acuerdo a la definición acostumbrada:
+
+\begin{lstlisting}[language=Prolog]
+  binTree(btnil).
+  binTree(btbranch(_, LChild, RChild)) :-
+          binTree(LChild),
+	  binTree(RChild).
+\end{lstlisting}
+
+\noindent
+Realice los siguientes predicados de acuerdo a lo antes presentado.%
+\footnote{
+  Para mayor información sobre recorridos en árboles, consultar \url{https://es.wikipedia.org/wiki/Recorrido_de_árboles\#Recorrido_en_profundidad-primero}.
+}.
+
+\begin{enumerate}
+\item \verb+infoTree/3+. Dado un árbol binario en el primer argumento, unifica el número de nodos\
+  internos que éste posee en el segundo y el número de hojas en el tercero.
+\item \verb+binSearchTree/2+. Dada una lista (posiblemente, de enteros) en su primer argumento,\
+  unifica el \emph{árbol binario de búsqueda} en su segundo argumento, construído a partir del primero.
+\item \verb+preOrder/2+. Dado un árbol binario binario (\emph{¡de búsqueda!}) pasado como primer argumento,\
+  unifica la lista con su recorrido \textbf{preorden} en el segundo argumento.
+\item \verb+postOrder/2+. Dado un árbol binario binario (\emph{¡de búsqueda!}) pasado como primer argumento,\
+  unifica la lista con su recorrido \textbf{postorden} en el segundo argumento.
+\item \verb+inOrder/2+. Dado un árbol binario binario (\emph{¡de búsqueda!}) pasado como primer argumento,\
+  unifica la lista con su recorrido \textbf{en orden} en el segundo argumento.
+\end{enumerate}
+
+\subsection{Un autómata compresor}
+
+\noindent
+Un algoritmo moderno de compresión de cadenas ha detectado que la existencia de subcadenas \emph{palíndromas}\
+implica una redundancia innecesaria sintáctica, cuya supresión es inherente a la semántica del enunciado.\
+Para evitar mayores pérdidas, se propone un método en el cual se recorra únicamente una vez una cadena\
+de longitud $n$ dada, de izquierda a derecha, detectando la existencia de palíndomos de longitud mayor a 1.\par
+Una vez que se encontró un palíndromo, deberán suprimirse los últimos $\lceil\frac{n}{2}\rceil$ símbolos\
+del palíndromo dado.\par
+Consideremos el predicado \verb+delPal/2+ que unifica una cadena con su versión compresa, de acuerdo a los\
+párrafos anteriores. Si $\alpha$ es una cadena de la forma
+\[\alpha = \beta\omega\omega^R\gamma\]
+(donde $\beta$ y $\omega$ también son cadenas) entonces, el algoritmo propuesto\
+deberá de procesar $\alpha$ de la siquiente manera:
+\[\text{delPal}(\alpha) = \text{delPal}(\beta)\omega\text{delPal}(\gamma).\]
+En el caso de que tengamos un palíndromo de longitud \emph{impar}, $\alpha$ sería de la forma
+\[\alpha = \beta\omega c \omega^R\gamma\]
+(donde $c$ es un símbolo) y su procesamiento sería
+\[\text{delPal}(\alpha) = \text{delPal}(\beta)c\omega\text{delPal}(\gamma).\]
+
+Realice la implementación de \verb+delPal/2+ en \verb+Prolog+, considerando que se tiene como\
+entrada una lista binaria (cadenas de 0s y 1s).
+
+\section{Entrega}
+
+\noindent
+La fecha de entrega es el próximo \textbf{sábado 02 de junio de 2018} por la plataforma\
+de \emph{Google Classroom} del curso y siguiendo los lineamientos del laboratorio.
+
+
+\end{document}
