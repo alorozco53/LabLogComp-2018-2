@@ -124,3 +124,26 @@ logicConsequence gamma phi = let allVariables = trim $ foldl (++) [] (map vars g
 logicConsequence2 :: [Prop] -> Prop -> Bool
 logicConsequence2 gamma phi = let bigProp = foldl Conj TTrue gamma
                               in tautology $ Imp bigProp phi
+
+test :: IO()
+test =
+  do
+    putStrLn "model/interp"
+    putStrLn $ show $ not $ model (Imp (VarP "p") (VarP "q")) ["p"]
+    putStrLn $ show $ interp foo1 []
+    putStrLn $ show $ interp foo2 (vars foo2)
+    putStrLn "tautology"
+    putStrLn $ show $ tautology foo1
+    putStrLn $ show $ tautology $ Imp (Conj foo3 foo2) foo1
+    putStrLn $ show $ tautology (Disj FFalse TTrue)
+    putStrLn "equivProp"
+    putStrLn $ show $ equivProp (Disj (Neg $ VarP "p") (VarP "q")) (Imp (VarP "p") (VarP "q"))
+    putStrLn $ show $ equivProp (Neg $ TTrue) (Conj (VarP "P") (Neg $ VarP "P"))
+    putStrLn "logicConsequence"
+    putStrLn $ show $ logicConsequence [Imp foo1 foo2, Imp foo2 foo3] (Imp foo1 foo3)
+    putStrLn $ show $ logicConsequence [Neg $ Disj foo3 foo2] (Conj (Neg foo2) (Neg foo3))
+    putStrLn $ show $ not $ logicConsequence [Disj foo3 foo2] (Conj (Neg foo2) (Neg foo1))
+      where
+        foo1 = Equiv (Disj (Neg $ VarP "p") (VarP "q")) (Imp (VarP "p") (VarP "q"))
+        foo2 = Imp (Disj (Neg $ VarP "p") (VarP "q")) (Imp (VarP "p") (VarP "q"))
+        foo3 = Imp (Imp (VarP "p") (VarP "q")) (Disj (Neg $ VarP "p") (VarP "q"))
