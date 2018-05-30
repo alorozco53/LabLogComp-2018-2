@@ -57,10 +57,6 @@ instance (Show Predicate) where
 
 type Sub = (String, Term)
 
-sub1 :: [Sub]
-sub1 = [("x", Funct "f" [VarP "y"]),
-        ("y", Funct "a" [])]
-
 -- Obtiene una lista de todas las variables en un término
 varsT :: Term -> [String]
 varsT (VarP n) = [n]
@@ -187,10 +183,17 @@ exuniverse :: Universe Int
 exuniverse = [0..2^15]
 exmodel :: Model Int
 exmodel = (exuniverse, examb, exfctx, expctx)
+sub1 :: [Sub]
+sub1 = [("x", Funct "f" [VarP "y"]),
+        ("y", Funct "a" [])]
 test :: IO()
 test =
   do
     putStrLn "sustitución"
+    putStrLn $ show $ foo1
+    putStrLn $ show $ foldl subPred foo1 sub1
+    putStrLn $ show $ foo2
+    putStrLn $ show $ foldl subPred foo2 sub1
     putStrLn "interpTerm"
     putStrLn $ show $ interpTerm (Funct "sum" [VarP "z", Funct "3" []]) exmodel == 7
     putStrLn $ show $ interpTerm (Funct "prod" [VarP "y", Funct "2" []]) exmodel == 138
@@ -198,3 +201,6 @@ test =
     putStrLn "interpPred"
     putStrLn $ show $ interpPred (All "x" (Pred "less" [Funct "sum" [VarP "x", VarP "z"], Funct "sum" [VarP "x", VarP "y"]])) exmodel
     putStrLn $ show $ interpPred (Ex "n" (All "m" (Imp (Neg $ Pred "equal" [VarP "n", Funct "0" []]) (Pred "less" [VarP "n", VarP "m"])))) exmodel
+      where
+        foo1 = (All "x" (Imp (Pred "P" [VarP "x"]) (Neg $ Pred "Q" [VarP "y"])))
+        foo2 = (All "y" (Imp (Pred "P" [VarP "x"]) (Neg $ Pred "Q" [VarP "y"])))
