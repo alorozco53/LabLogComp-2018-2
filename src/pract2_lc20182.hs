@@ -136,43 +136,6 @@ interpTerm (Funct n args) (u, l, fctx, pctx) = fctx n (interpArgs args)
   where
     interpArgs args' = map (\t -> interpTerm t (u, l, fctx, pctx)) args'
 
-
-exfctx :: FunctCtx Int
-exfctx "sum" args = case args of
-                      [] -> error "function not a constant!"
-                      xs -> foldl (+) 0 xs
-exfctx "prod" args = case args of
-                       [] -> error "function not a constant!"
-                       xs -> foldl (*) 1 xs
-exfctx const args = case args of
-                      [] -> read const :: Int
-                      _ -> error "constant must not have arguments"
-
-expctx :: PredCtx Int
-expctx "less" args = case args of
-                       [] -> error "arity must be >= 1 !"
-                       (x:xs) -> case xs of
-                                   [] -> error "we need at least two arguments!"
-                                   (y:_) -> x < y
-expctx "equal" args = case args of
-                        [] -> error "arity must be >= 1 !"
-                        (x:xs) -> case xs of
-                                    [] -> error "we need at least two arguments!"
-                                    (y:_) -> x == y
-
-examb :: Ambient Int
-examb "x" = 1
-examb "y" = 69
-examb "z" = 4
-examb "w" = 15
-examb _ = error "not defined!"
-
-exuniverse :: Universe Int
-exuniverse = [0..2^15]
-
-exmodel :: Model Int
-exmodel = (exuniverse, examb, exfctx, expctx)
-
 -- Interpretación de predicados
 interpPred :: Predicate -> Model a -> Bool
 interpPred (Pred name args) (u, l, fctx, pctx) = case args of
@@ -191,3 +154,47 @@ interpPred (All x p) (u, l, fctx, pctx) = and [interpPred p (u, newAmb l val, fc
 interpPred (Ex x p) (u, l, fctx, pctx) = or [interpPred p (u, newAmb l val, fctx, pctx) | val <- u]
   where
     newAmb l' a' = (\y -> if y == x then a' else l' y)
+
+-- Testing
+exfctx :: FunctCtx Int
+exfctx "sum" args = case args of
+                      [] -> error "function not a constant!"
+                      xs -> foldl (+) 0 xs
+exfctx "prod" args = case args of
+                       [] -> error "function not a constant!"
+                       xs -> foldl (*) 1 xs
+exfctx const args = case args of
+                      [] -> read const :: Int
+                      _ -> error "constant must not have arguments"
+expctx :: PredCtx Int
+expctx "less" args = case args of
+                       [] -> error "arity must be >= 1 !"
+                       (x:xs) -> case xs of
+                                   [] -> error "we need at least two arguments!"
+                                   (y:_) -> x < y
+expctx "equal" args = case args of
+                        [] -> error "arity must be >= 1 !"
+                        (x:xs) -> case xs of
+                                    [] -> error "we need at least two arguments!"
+                                    (y:_) -> x == y
+examb :: Ambient Int
+examb "x" = 1
+examb "y" = 69
+examb "z" = 4
+examb "w" = 15
+examb _ = error "not defined!"
+exuniverse :: Universe Int
+exuniverse = [0..2^15]
+exmodel :: Model Int
+exmodel = (exuniverse, examb, exfctx, expctx)
+test :: IO()
+test =
+  do
+    putStrLn "sustitución"
+    putStrLn "interpTerm"
+    putStrLn $ show $ interpTerm (Funct "sum" [VarP "z", Funct "3" []]) exmodel == 7
+    putStrLn $ show $ interpTerm (Funct "prod" [VarP "y", Funct "2" []]) exmodel == 138
+    putStrLn $ show $ interpTerm (Funct "prod" [Funct "sum" [VarP "x", VarP "y"], Funct "2" []]) exmodel == 140
+    putStrLn "interpPred"
+    putStrLn $ show $ interpPred (All "x" (Pred "less" [Funct "sum" [VarP "x", VarP "z"], Funct "sum" [VarP "x", VarP "y"]])) exmodel
+    putStrLn $ show $ interpPred (Ex "n" (All "m" (Imp (Neg $ Pred "equal" [VarP "n", Funct "0" []]) (Pred "less" [VarP "n", VarP "m"])))) exmodel
